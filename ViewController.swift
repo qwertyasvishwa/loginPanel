@@ -21,34 +21,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
-        request.returnsObjectsAsFaults = false
-        do
-        {
-            let results = try context.fetch(request)
-            if results.count > 0
-            {
-//                for result in results as! [NSManagedObject]
-//                {
-//                    if (result.value(forKey: "username") as? String) != nil
-//                    {
-//                       self.performSegue(withIdentifier: "mainSegue", sender: nil)
-//                    }
-//                    
-//                }
-                
-                self.performSegue(withIdentifier: "mainSegue", sender: nil)
-            }
-           
-        }
-        catch
-        {
-            print("Error in fetching the data!")
-        }
-        
-
         
     }
 
@@ -77,7 +49,6 @@ class ViewController: UIViewController {
                             let context = appDelegate.persistentContainer.viewContext
                             let newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
                             newUser.setValue(self.username.text!, forKey: "username")
-                            newUser.setValue(self.password.text!, forKey: "password")
                             
                             do
                             {
@@ -100,6 +71,36 @@ class ViewController: UIViewController {
             
         }
 
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
+        request.returnsObjectsAsFaults = false
+        do
+        {
+            let results = try context.fetch(request)
+            
+            for result in results as! [NSManagedObject]
+            {
+                print("Step 1")
+                
+                if let username = result.value(forKey: "username") as? String
+                {
+                    self.performSegue(withIdentifier: "mainSegue", sender: nil)
+                    print("Step 2")
+                    
+                }
+            }
+            
+        }
+        catch
+        {
+            print("Error in fetching the data!")
+        }
         
     }
     

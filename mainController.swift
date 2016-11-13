@@ -33,14 +33,18 @@ class mainController: UIViewController {
             let results = try context.fetch(request)
             if results.count > 0
             {
-                for result in results as! [NSManagedObject]
+                for result in results
                 {
-                    context.delete(result)
-//                    if result.value(forKey: "username") != nil
-//                    {
-//                        print("\(result) deleted")
-//                        context.delete(result)
-//                    }
+                    context.delete(result as! NSManagedObject)
+                    
+                    do
+                    {
+                        try context.save()
+                    }
+                    catch
+                    {
+                        print("Could not able to logout Successfully! ")
+                    }
                 }
             }
             else
